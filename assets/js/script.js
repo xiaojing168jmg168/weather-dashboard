@@ -1,15 +1,15 @@
-var searchCity = document.querySelector('#search-city');
-var searchForm = document.querySelector('#user-form');
-var searchCityButton = document.querySelector('.search-btn');
+var searchCity = document.querySelector("#search-city");
+var searchForm = document.querySelector("#user-form");
+var searchCityButton = document.querySelector(".search-btn");
 var APIKey = "adf46be5146fd6c70576939f90013837";
-var cityItemEl = document.querySelector('#city-list');
+var cityItemEl = document.querySelector("#city-list");
 
 var cityName = localStorage.getItem("city");
- var clearEl = document.querySelector('.clear-history');
+ var clearEl = document.querySelector(".clear-history");
 
   var searchHistoryList = JSON.parse(localStorage.getItem("city")) || [];
 
-var URLForecast = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + '&units=imperial' +APIKey;
+var URLForecast = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=imperial" +APIKey;
 //clicking search button will trigger sarchApi 
    
 function handleSubmit(event){
@@ -18,16 +18,19 @@ function handleSubmit(event){
      var city = searchCity.value.trim();
   
     getWeather(city);
-    searchCity.value="";
+    searchCity.innerHTML="";
     
-    displayCities(city);
+    displayCities();
 }
-searchForm.addEventListener('submit', handleSubmit);
+searchForm.addEventListener("submit", handleSubmit);
 
 //get user search save to local and inset to ul 
 
 function displayCities(){
 var city = searchCity.value.trim();
+if(searchHistoryList.includes(city)){
+return;
+}else{
  searchHistoryList.push(city);
   localStorage.setItem("city", JSON.stringify(searchHistoryList));
     console.log(searchHistoryList); 
@@ -45,28 +48,29 @@ var searchedCity = document.createElement("input");
             })
 
     cityItemEl.appendChild(searchedCity);
-  
-}
-}
-
- displayCities();
+  }
 if(searchHistoryList.length>0){
 getWeather(searchHistoryList[searchHistoryList.length - 1]);
 }
+}
+}
+
+//  displayCities();
+
 
 
   // Clear History button
     clearEl.addEventListener("click", function () {
         localStorage.clear();
         searchHistoryList = [];
-        displayCities();
+        document.location.reload();
     })
 
 
 
 // Request Open Weather API based on user input
 function getWeather(searchValue){
- fetch('https://api.openweathermap.org/data/2.5/weather?q=' + searchValue+ '&appid=' + APIKey +'&cnt=5') 
+ fetch("https://api.openweathermap.org/data/2.5/weather?q=" + searchValue+ "&appid=" + APIKey + "&cnt=5") 
 
   .then(function(response){
     return response.json();
