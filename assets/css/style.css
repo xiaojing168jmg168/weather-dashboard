@@ -41,6 +41,14 @@ margin-top: 5px;
 margin-bottom: 5px;
 }
 
+.city-li {
+margin-top: 5px;
+margin-bottom: 5px;
+margin-right: 5px;
+width:100%;
+text-transform: capitalize; 
+text-align: center;
+}
 .search-label{
 font-size: 32px;
 font-weight: 500;
