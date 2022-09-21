@@ -7,7 +7,7 @@ var cityItemEl = document.querySelector('#city-list');
 var cityName = localStorage.getItem("city");
  var clearEl = document.querySelector('.clear-history');
 
-  var searchHistoryList = [];
+  var searchHistoryList = JSON.parse(localStorage.getItem("city")) || [];
 
 var URLForecast = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + '&units=imperial' +APIKey;
 //clicking search button will trigger sarchApi 
@@ -16,14 +16,10 @@ function handleSubmit(event){
     event.preventDefault();
 
      var city = searchCity.value.trim();
-    if(!city){
-    console.error('You need a search input value!');
-    return;
-    }
+  
     getWeather(city);
     searchCity.value="";
     
-  
     displayCities(city);
 }
 searchForm.addEventListener('submit', handleSubmit);
@@ -42,7 +38,7 @@ var searchedCity = document.createElement("input");
     searchedCity.setAttribute("type","text");
     searchedCity.setAttribute("readonly",true);
     searchedCity.setAttribute("class", "d-block bg-white city-li form-control");
-    searchedCity.setAttribute("style", "width: 100%");
+   
     searchedCity.setAttribute("value", searchHistoryList[i]);
     searchedCity.addEventListener("click",function() {
                 getWeather(searchedCity.value);
@@ -52,7 +48,11 @@ var searchedCity = document.createElement("input");
   
 }
 }
- 
+
+ displayCities();
+if(searchHistoryList.length>0){
+getWeather(searchHistoryList[searchHistoryList.length - 1]);
+}
 
 
   // Clear History button
@@ -63,7 +63,7 @@ var searchedCity = document.createElement("input");
     })
 
 
-// Request Open Weather API based on user input
+
 // Request Open Weather API based on user input
 function getWeather(searchValue){
  fetch('https://api.openweathermap.org/data/2.5/weather?q=' + searchValue+ '&appid=' + APIKey +'&cnt=5') 
