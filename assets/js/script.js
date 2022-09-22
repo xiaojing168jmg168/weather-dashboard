@@ -54,7 +54,7 @@ var searchedCity = document.createElement("input");
    
     searchedCity.setAttribute("value", searchHistoryList[i]);
     searchedCity.addEventListener("click",function() {
-                getWeather(searchedCity.value);
+                getWeather(searchHistoryList[i]);
             })
 
     cityItemEl.appendChild(searchedCity);
@@ -113,7 +113,7 @@ return fetch("https://api.openweathermap.org/data/2.5/forecast?id=" + cityId + "
     return response.json();
     })
     .then(function(data){
-    console.log(JSON.stringify(data));
+   
 
 //display the forecast
   for(let i=0; i<forecastEls.length; i++){
@@ -162,7 +162,18 @@ return fetch("https://api.openweathermap.org/data/2.5/forecast?id=" + cityId + "
         })
     }
 
+// WHEN I open the weather dashboard
+// THEN I am presented with the last searched city forecast
+$(document).ready(function() {
+    var searchHistoryArr = JSON.parse(localStorage.getItem("city"));
 
+    if (searchHistoryArr !== null) {
+        var lastSearchedIndex = searchHistoryArr.length - 1;
+        var lastSearchedCity = searchHistoryArr[lastSearchedIndex];
+        getWeather(lastSearchedCity);
+        console.log(`Last searched city: ${lastSearchedCity}`);
+    }
+});
       
 
 
