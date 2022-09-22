@@ -162,15 +162,16 @@ return fetch("https://api.openweathermap.org/data/2.5/forecast?id=" + cityId + "
         })
     }
 
-// WHEN I open the weather dashboard
-// THEN I am presented with the last searched city forecast
+//when open the app display last searched city forecast
 $(document).ready(function() {
     var searchHistoryArr = JSON.parse(localStorage.getItem("city"));
 
     if (searchHistoryArr !== null) {
         var lastSearchedIndex = searchHistoryArr.length - 1;
         var lastSearchedCity = searchHistoryArr[lastSearchedIndex];
+
         getWeather(lastSearchedCity);
+        displayCities(searchHistoryArr);
         console.log(`Last searched city: ${lastSearchedCity}`);
     }
 });
