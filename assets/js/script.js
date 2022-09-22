@@ -18,18 +18,19 @@ var cityName = localStorage.getItem("city");
   var searchHistoryList = JSON.parse(localStorage.getItem("city")) || [];
 
 
-//clicking search button will trigger sarchApi 
+//clicking search button will trigger sarchApi and display searched cities
    
 function handleSubmit(event){
     event.preventDefault();
 
     var city = searchCity.value.trim();
-   
+
+   searchCity.innerHTML="";
+
     getWeather(city);
-    
-    searchCity.innerHTML="";
-    
+
     displayCities();
+      
 }
 searchForm.addEventListener("submit", handleSubmit);
 
@@ -105,7 +106,7 @@ function getWeather(searchValue){
      currentHumEl.innerHTML = "Humidity: " + data.main.humidity + "%";
      currentWindEl.innerHTML = "Wind Speed: " + data.wind.speed + " MPH";
 let cityId = data.id;
-return fetch("https://api.openweathermap.org/data/2.5/forecast?id=" + cityId + "&appid=" + APIKey + "&cnt=5"); 
+return fetch("https://api.openweathermap.org/data/2.5/forecast?id=" + cityId + "&appid=" + APIKey); 
     })
 
   .then(function(response){
@@ -119,7 +120,7 @@ return fetch("https://api.openweathermap.org/data/2.5/forecast?id=" + cityId + "
 
     forecastEls[i].innerHTML="";
     const forecastIndex = i * 8 + 4;
-    
+   
     var cityInfo = {
       icon: data.list[forecastIndex].weather[0].icon,
       temp: data.list[forecastIndex].main.temp,
@@ -166,48 +167,4 @@ return fetch("https://api.openweathermap.org/data/2.5/forecast?id=" + cityId + "
 
 
 
-
-// }
-    
-
-
-
-// })
-
-
-    
-
-
-// function getLatAndLon(){
-// cityCode = searchCity.value.trim();
-// fetch("http://api.openweathermap.org/geo/1.0/direct?q=" + cityCode + "," + countryCode+"&limit=5&appid=" + APIKey) 
-
-//   .then(function(response){
-//     return response.json();
-//     })
-//     .then(function(data){
-//     console.log(JSON.stringify(data));
-
-
-// })}
-// getLatAndLon();
-
-// function weatherForecast(){
-// var city = searchCity.value.trim();
-
-// fetch("https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + APIKey) 
-
-//   .then(function(response){
-//     return response.json();
-//     })
-//     .then(function(data){
-//     // console.log(JSON.stringify(data));
-
-//     var currentDay = moment().format('L');
-
-
-
-// })
-// }
-// weatherForecast();
 
