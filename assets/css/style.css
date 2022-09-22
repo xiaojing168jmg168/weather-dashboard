@@ -51,6 +51,10 @@ width:100%;
 text-transform: capitalize; 
 text-align: center;
 }
+
+.city-li:focus{
+background-color: gray;
+}
 .search-label{
 font-size: 32px;
 font-weight: 500;
@@ -67,4 +71,9 @@ font-weight: 700;
 }
 h3{
 font-weight: 700;
+}
+
+.forecast{
+margin-right: 4px;
+margin-left: 4px;
 }

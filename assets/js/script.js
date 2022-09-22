@@ -8,21 +8,25 @@ var currentPic = document.querySelector("#current-pic");
 var currentTempEl = document.querySelector("#temperature");
 var currentHumEl = document.querySelector("#humidity");
 var currentWindEl = document.querySelector("#wind-speed");
+var weatherContainer = document.querySelector(".weather-container");
+// var countryCode = "US";
+var forecastEls = document.querySelectorAll(".forecast");
 
 var cityName = localStorage.getItem("city");
  var clearEl = document.querySelector(".clear-history");
 
   var searchHistoryList = JSON.parse(localStorage.getItem("city")) || [];
 
-var URLForecast = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=imperial" +APIKey;
+
 //clicking search button will trigger sarchApi 
    
 function handleSubmit(event){
     event.preventDefault();
 
-     var city = searchCity.value.trim();
-  
+    var city = searchCity.value.trim();
+   
     getWeather(city);
+    
     searchCity.innerHTML="";
     
     displayCities();
@@ -54,9 +58,7 @@ var searchedCity = document.createElement("input");
 
     cityItemEl.appendChild(searchedCity);
   }
-if(searchHistoryList.length>0){
-getWeather(searchHistoryList[searchHistoryList.length - 1]);
-}
+
 }
 }
 
@@ -71,12 +73,14 @@ getWeather(searchHistoryList[searchHistoryList.length - 1]);
         localStorage.clear();
         searchHistoryList = [];
         document.location.reload();
+        weatherContainer.innerHTML="";
     })
 
 
 
 // Request Open Weather API based on user input
 function getWeather(searchValue){
+
  fetch("https://api.openweathermap.org/data/2.5/weather?q=" + searchValue+ "&appid=" + APIKey + "&cnt=5") 
 
   .then(function(response){
@@ -84,10 +88,12 @@ function getWeather(searchValue){
     })
     .then(function(data){
     console.log(JSON.stringify(data));
+   
 
     var currentDay = moment().format('L');
     console.log(currentDay);
-    //  var data = JSON.stringify(data);
+    
+    //displya current date weather
 
      nameEl.innerHTML= data.name + " (" + currentDay + ")";
 
@@ -98,26 +104,110 @@ function getWeather(searchValue){
      currentTempEl.innerHTML = "Temperature: " + kToF(data.main.temp) + "°F";
      currentHumEl.innerHTML = "Humidity: " + data.main.humidity + "%";
      currentWindEl.innerHTML = "Wind Speed: " + data.wind.speed + " MPH";
+let cityId = data.id;
+return fetch("https://api.openweathermap.org/data/2.5/forecast?id=" + cityId + "&appid=" + APIKey + "&cnt=5"); 
+    })
+
+  .then(function(response){
+    return response.json();
+    })
+    .then(function(data){
+    console.log(JSON.stringify(data));
+
+//display the forecast
+  for(let i=0; i<forecastEls.length; i++){
+
+    forecastEls[i].innerHTML="";
+    const forecastIndex = i * 8 + 4;
+    
+    var cityInfo = {
+      icon: data.list[forecastIndex].weather[0].icon,
+      temp: data.list[forecastIndex].main.temp,
+      humidity: data.list[forecastIndex].main.humidity,
+      wind: data.list[forecastIndex].wind.speed
+      };
+    
+    //  display the date, icon, weather conditions
+
+    const forecastDate = new Date(data.list[forecastIndex].dt * 1000);
+    const forecastDay = forecastDate.getDate();
+    const forecastMonth = forecastDate.getMonth() + 1;
+    const forecastYear = forecastDate.getFullYear();
+    const forecastDateEl = document.createElement('p');
+    forecastDateEl.setAttribute("class", "mt-3 mb-0 forecast-date");
+    forecastDateEl.innerHTML = forecastMonth + "/" + forecastDay + "/" + forecastYear;
+
+    forecastEls[i].appendChild(forecastDateEl);
+
+    const forecastIcon = document.createElement('img');
+    forecastIcon.setAttribute("src","https://openweathermap.org/img/wn/" + cityInfo.icon + "@2x.png");
+    forecastIcon.setAttribute("alt",data.list[forecastIndex].weather[0].main);
+    forecastEls[i].appendChild(forecastIcon);
+      
+    const forecastTempEl = document.createElement('p');
+    forecastTempEl.innerHTML = "Temp: " + kToF(cityInfo.temp) + "°F";
+    forecastEls[i].appendChild(forecastTempEl);
+
+    const forecastHumidityEl = document.createElement('p');
+    forecastHumidityEl.innerHTML = "Humidity: " + cityInfo.humidity + "%";
+    forecastEls[i].appendChild(forecastHumidityEl);
+
+    const forecastWindEl = document.createElement('p');
+    forecastWindEl.innerHTML = "Wind Speed: " + cityInfo.wind + "MPH";
+    forecastEls[i].appendChild(forecastWindEl);
+
+        }
+
+        })
+    }
 
 
+      
+
+
+
+
+// }
+    
+
+
+
+// })
 
 
     
-    })
-
-}
-console.log(getWeather("cleveland"));
 
 
-// {"coord":{"lon":-81.6954,"lat":41.4995},
-// "weather":[{"id":803,"main":"Clouds","description":"broken clouds","icon":"04d"}],
-// "base":"stations",
-// "main":{"temp":302.78,"feels_like":305.66,"temp_min":300.38,"temp_max":304.6,"pressure":1009,"humidity":62},"visibility":10000,
-// "wind":{"speed":8.75,"deg":230,"gust":10.8},
-// "clouds":{"all":75},
-// "dt":1663784253,
-// "sys":{"type":1,"id":3455,"country":"US","sunrise":1663758791,"sunset":1663802795},
-// "timezone":-14400,
-// "id":5150529,
-// "name":"Cleveland",
-// "cod":200}
+// function getLatAndLon(){
+// cityCode = searchCity.value.trim();
+// fetch("http://api.openweathermap.org/geo/1.0/direct?q=" + cityCode + "," + countryCode+"&limit=5&appid=" + APIKey) 
+
+//   .then(function(response){
+//     return response.json();
+//     })
+//     .then(function(data){
+//     console.log(JSON.stringify(data));
+
+
+// })}
+// getLatAndLon();
+
+// function weatherForecast(){
+// var city = searchCity.value.trim();
+
+// fetch("https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + APIKey) 
+
+//   .then(function(response){
+//     return response.json();
+//     })
+//     .then(function(data){
+//     // console.log(JSON.stringify(data));
+
+//     var currentDay = moment().format('L');
+
+
+
+// })
+// }
+// weatherForecast();
+
