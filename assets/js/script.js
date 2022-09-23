@@ -11,6 +11,7 @@ var currentWindEl = document.querySelector("#wind-speed");
 var weatherContainer = document.querySelector(".weather-container");
 // var countryCode = "US";
 var forecastEls = document.querySelectorAll(".forecast");
+var form = document.querySelector("#user-form");
 
 var cityName = localStorage.getItem("city");
  var clearEl = document.querySelector(".clear-history");
@@ -25,12 +26,13 @@ function handleSubmit(event){
 
     var city = searchCity.value.trim();
 
-   searchCity.innerHTML="";
+  // searchCity.innerHTML="";
 
     getWeather(city);
 
     displayCities();
-      
+//clear input after search
+     form.reset();  
 }
 searchForm.addEventListener("submit", handleSubmit);
 
@@ -42,7 +44,7 @@ if(searchHistoryList.includes(city) || city === ""){
 renderCities();
 return;
 }else{
- searchHistoryList.push(city);
+ searchHistoryList.unshift(city);
   localStorage.setItem("city", JSON.stringify(searchHistoryList));
     console.log(searchHistoryList); 
 renderCities();
@@ -170,8 +172,8 @@ $(document).ready(function() {
     var searchHistoryArr = JSON.parse(localStorage.getItem("city"));
 
     if (searchHistoryArr !== null) {
-        var lastSearchedIndex = searchHistoryArr.length - 1;
-        var lastSearchedCity = searchHistoryArr[lastSearchedIndex];
+       
+        var lastSearchedCity = searchHistoryArr[0];
 
         getWeather(lastSearchedCity);
         displayCities();
