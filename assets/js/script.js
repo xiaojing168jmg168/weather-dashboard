@@ -79,7 +79,7 @@ var searchedCity = document.createElement("input");
         localStorage.clear();
         searchHistoryList = [];
         document.location.reload();
-        weatherContainer.innerHTML="";
+        
     })
 
 
@@ -177,7 +177,7 @@ $(document).ready(function() {
 
         getWeather(lastSearchedCity);
         displayCities();
-        console.log(`Last searched city: ${lastSearchedCity}`);
+      
     }
 });
       
