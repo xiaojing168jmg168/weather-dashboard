@@ -38,13 +38,19 @@ searchForm.addEventListener("submit", handleSubmit);
 
 function displayCities(){
 var city = searchCity.value.trim();
-if(searchHistoryList.includes(city)){
+if(searchHistoryList.includes(city) || city === ""){
+renderCities();
 return;
 }else{
  searchHistoryList.push(city);
   localStorage.setItem("city", JSON.stringify(searchHistoryList));
     console.log(searchHistoryList); 
-   
+renderCities();
+}
+}
+
+
+function renderCities(){
 cityItemEl.innerHTML="";
 for(let i=0; i<searchHistoryList.length; i++){
 var searchedCity = document.createElement("input");
@@ -59,10 +65,7 @@ var searchedCity = document.createElement("input");
 
     cityItemEl.appendChild(searchedCity);
   }
-
 }
-}
-
 
 //temp from Default: Kelvin to Fahrenheit.
   function kToF(K) {
@@ -171,7 +174,7 @@ $(document).ready(function() {
         var lastSearchedCity = searchHistoryArr[lastSearchedIndex];
 
         getWeather(lastSearchedCity);
-        displayCities(searchHistoryArr);
+        displayCities();
         console.log(`Last searched city: ${lastSearchedCity}`);
     }
 });
